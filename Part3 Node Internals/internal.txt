@@ -1,0 +1,76 @@
+ 1 - > What is the Node.js Event Loop?
+The Event Loop is a mechanism inside Node.js that allows it to handle non-blocking operations.
+It continuously checks the call stack and the callback queue.
+If the call stack is empty, it takes the next callback from the queue and executes it.
+This makes Node.js able to run asynchronous code efficiently.
+
+
+ 2 - > What is Libuv and What Role Does It Play in Node.js?
+Libuv is a C library used by Node.js to handle asynchronous operations.
+It provides:
+
+The Event Loop
+
+Thread Pool
+
+Asynchronous I/O (file system, DNS, etc.)
+
+Timers
+It is the core layer that makes Node.js non-blocking.
+
+
+
+ 3 - > How Does Node.js Handle Asynchronous Operations Under the Hood?
+When you call an async function (like reading a file):
+
+Node sends the task to Libuv
+
+Libuv either uses the thread pool or OS APIs
+
+Once done, Libuv pushes the callback to the Event Queue
+
+The Event Loop takes the callback and executes it when the call stack is empty
+This is how Node.js avoids blocking the main thread.
+
+
+
+ 4 - > Difference Between Call Stack, Event Queue, and Event Loop
+Call Stack:
+Where the currently running JavaScript code is executed.
+Functions are pushed and popped from here.
+
+Event Queue (Callback Queue):
+Where callbacks of finished async operations wait to be executed.
+
+Event Loop:
+A controller that constantly checks:
+“If the call stack is empty, move the next callback from the queue to the stack.”
+
+
+
+ 5 - > What is the Node.js Thread Pool and How to Set Its Size?
+The Thread Pool is a set of background threads provided by Libuv (default = 4 threads).
+Used for heavy operations like:
+
+File System
+
+DNS lookups
+
+Compression
+
+Crypto
+
+To change its size  ::: SET UV_THREADPOOL_SIZE=8
+
+
+
+6 - > How Does Node.js Handle Blocking and Non-Blocking Code Execution?
+Blocking code:
+Runs on the main thread and stops everything until it finishes.
+Example: fs.readFileSync()
+
+Non-Blocking code:
+Delegates work to Libuv thread pool or OS, so the main thread stays free.
+Example: fs.readFile()
+
+Node.js always prefers non-blocking operations to stay fast and responsive.
